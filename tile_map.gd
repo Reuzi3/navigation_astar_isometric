@@ -2,20 +2,20 @@ extends TileMap
 
 enum Tile { OBSTACLE, START_POINT, END_POINT }
 
-@onready var game_map: TileMap = $"."
+@onready var game_map: TileMap = $"."  # Referência ao TileMap atual
 
 const CELL_SIZE = Vector2i(64, 32)
 const BASE_LINE_WIDTH = 3.0
 const DRAW_COLOR = Color.WHITE * Color(1, 1, 1, 0.5)
 
-# O objeto para pathfinding em grades 2D.
+# Objeto para pathfinding em grades 2D
 var _astar = AStarGrid2D.new()
 
 var _start_point = Vector2i()
 var _end_point = Vector2i()
 var _path = PackedVector2Array()
 
-# Mantém uma lista de tiles ID 2 que devem ser tratados de forma especial
+# Lista de tiles com ID 2 que devem ser tratados de forma especial
 var _ignored_tiles = []
 
 func _ready():
@@ -35,11 +35,11 @@ func _ready():
 		for j in range(_astar.region.position.y, _astar.region.end.y):
 			var pos = Vector2i(i, j)
 			var tile_id = get_cell_source_id(0, pos)
-			# Adiciona tiles ID 2 à lista especial
+			# Adiciona tiles com ID 2 à lista especial
 			if tile_id == 2:
 				_ignored_tiles.append(pos)
-			# Marca como sólido se não for andável e não for ID 2
-			elif tile_id != 1:
+			# Marca como sólido se não for andável e não for ID 2 ou ID 3
+			elif tile_id != 1 and tile_id != 3:
 				_astar.set_point_solid(pos)
 
 func _draw():
@@ -73,15 +73,51 @@ func find_path(local_start_point, local_end_point):
 	_start_point = local_to_map(local_start_point)
 	_end_point = local_to_map(local_end_point)
 
-	# Remove temporariamente os tiles ID 2 do cálculo, exceto o ponto final
+	# Remove temporariamente os tiles com ID 2 do cálculo, exceto o ponto final
 	for pos in _ignored_tiles:
 		if pos != _end_point:
 			_astar.set_point_solid(pos, true)
 
-	# Gera o caminho
-	_path = _astar.get_id_path(_start_point, _end_point)
+	# Verifica se o tile de destino é um portal (ID 3)
+	var tile_id = get_cell_source_id(0, _end_point)
+	if tile_id == 3:
+		# Define pontos frontais e traseiros
+		var front_point = _end_point + Vector2i(-1, 0)  # Ajuste para entrada pela frente
+		var back_point = _end_point + Vector2i(1, 0)   # Ajuste para entrada por trás
 
-	# Restaura os tiles ID 2 como andáveis
+		# Calcula a distância até ambos os pontos
+		var distance_to_front = _start_point.distance_to(front_point)
+		var distance_to_back = _start_point.distance_to(back_point)
+
+		# Verifica se já está na frente ou atrás do portal
+		if _start_point == front_point or _start_point == back_point:
+			_path = _astar.get_id_path(_start_point, _end_point)
+		else:
+			# Seleciona o ponto mais próximo entre frente e trás
+			var selected_point = null
+			if distance_to_front <= distance_to_back and not _astar.is_point_solid(front_point):
+				selected_point = front_point
+			elif distance_to_back < distance_to_front and not _astar.is_point_solid(back_point):
+				selected_point = back_point
+
+			# Gera o caminho até o ponto selecionado e depois ao portal
+			if selected_point != null:
+				var path_to_point = _astar.get_id_path(_start_point, selected_point)
+				if not path_to_point.is_empty():
+					path_to_point.append(_end_point)
+					_path = path_to_point
+				else:
+					print("Caminho até o ponto selecionado não encontrado!")
+					return []
+			else:
+				print("Nenhum ponto acessível disponível para o portal!")
+				return []
+
+	else:
+		# Gera o caminho normalmente para tiles que não são portais
+		_path = _astar.get_id_path(_start_point, _end_point)
+
+	# Restaura os tiles com ID 2 como andáveis
 	for pos in _ignored_tiles:
 		_astar.set_point_solid(pos, false)
 

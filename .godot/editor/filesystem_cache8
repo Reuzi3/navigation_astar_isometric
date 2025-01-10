@@ -1,19 +1,20 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1736502901
-character.gd::GDScript::-1::1736502669::0::1::::<>Node2D<>::
-game.tscn::PackedScene::1768986849745668317::1736502846::0::1::::<><>::uid://baj4xukvf568b::::res://sprites/space.png<>uid://dy5b8kfc35d2w::::res://sprites/64block.png<>uid://dprxjs1x6lv0n::::res://sprites/64.png<>res://scripts/character.gd<>uid://bjsmfha28ro00::::res://sprites/sparkle.png<>uid://vsempfpeu7wr::::res://sprites/character.png<>res://scripts/tile_map.gd<>uid://x5elq43j1eu1::::res://sprites/Visible.png
+::res://::1736511781
+character.gd::GDScript::-1::1736508746::0::1::::<>Node2D<>::
+game.tscn::PackedScene::1768986849745668317::1736511781::0::1::::<><>::uid://baj4xukvf568b::::res://sprites/space.png<>uid://dy5b8kfc35d2w::::res://sprites/64block.png<>uid://dprxjs1x6lv0n::::res://sprites/64.png<>uid://c4lreyditi33t::::res://sprites/ignoravel.png<>res://character.gd<>uid://bjsmfha28ro00::::res://sprites/sparkle.png<>uid://bsbmi535pdo2f::::res://sprites/Vertical.png<>res://tile_map.gd<>uid://c5fi668lf84em::::res://sprites/Ellipse 1.png<>uid://x5elq43j1eu1::::res://sprites/Visible.png
 pathfind_astar.gd::GDScript::-1::1736456084::0::1::::<>TileMap<>::
 README.md::TextFile::-1::1736457754::0::1::::<><>::
-tile_map.gd::GDScript::-1::1736502651::0::1::::<>TileMap<>::
-::res://sprites/::1736502950
+tile_map.gd::GDScript::-1::1736511780::0::1::::<>TileMap<>::
+::res://sprites/::1736510040
 64.png::CompressedTexture2D::8248602677119693915::1736406765::1736502605::1::::<><>::
 64block.png::CompressedTexture2D::8905845812292497000::1736406770::1736502605::1::::<><>::
 character.png::CompressedTexture2D::1511389609731655421::1736429542::1736502605::1::::<><>::
+Ellipse 1.png::CompressedTexture2D::6889371340560858240::1736510040::1736510040::1::::<><>::
 ignoravel.png::CompressedTexture2D::6832066585820486507::1736502942::1736502942::1::::<><>::
 space.png::CompressedTexture2D::2406803016406767807::1736429542::1736502605::1::::<><>::
 sparkle.png::CompressedTexture2D::3056016977826182299::1736429542::1736502605::1::::<><>::
-Vertical.png::CompressedTexture2D::3652628757534451227::1736502950::1736502950::1::::<><>::
-Visible.png::CompressedTexture2D::1676538134458734322::1736456195::1736502605::1::::<><>::
+Vertical.png::CompressedTexture2D::3652628757534451227::1736511877::1736511884::1::::<><>::
+Visible.png::CompressedTexture2D::1676538134458734322::1736456195::1736504502::1::::<><>::
 ::res://tileset/::1736502605
 tileset.tres::TileSet::410104364932629344::1736457213::0::1::::<><>::uid://dy5b8kfc35d2w::::res://sprites/64block.png
 tilesheet.png::CompressedTexture2D::6652622416011364222::1736429542::1736502605::1::::<><>::
