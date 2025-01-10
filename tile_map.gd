@@ -85,33 +85,26 @@ func find_path(local_start_point, local_end_point):
 		var front_point = _end_point + Vector2i(-1, 0)  # Ajuste para entrada pela frente
 		var back_point = _end_point + Vector2i(1, 0)   # Ajuste para entrada por trás
 
-		# Calcula a distância até ambos os pontos
-		var distance_to_front = _start_point.distance_to(front_point)
-		var distance_to_back = _start_point.distance_to(back_point)
+		# Verifica se as entradas estão acessíveis
+		var front_accessible = not _astar.is_point_solid(front_point)
+		var back_accessible = not _astar.is_point_solid(back_point)
 
-		# Verifica se já está na frente ou atrás do portal
-		if _start_point == front_point or _start_point == back_point:
-			_path = _astar.get_id_path(_start_point, _end_point)
+		# Determina qual entrada usar com base na acessibilidade
+		var selected_point
+		if front_accessible and back_accessible:
+			selected_point = front_point if front_point.distance_to(_start_point) <= back_point.distance_to(_start_point) else back_point
+		elif front_accessible:
+			selected_point = front_point
+		elif back_accessible:
+			selected_point = back_point
 		else:
-			# Seleciona o ponto mais próximo entre frente e trás
-			var selected_point = null
-			if distance_to_front <= distance_to_back and not _astar.is_point_solid(front_point):
-				selected_point = front_point
-			elif distance_to_back < distance_to_front and not _astar.is_point_solid(back_point):
-				selected_point = back_point
+			# Nenhuma entrada acessível
+			print("Nenhuma entrada acessível para o portal!")
+			return []
 
-			# Gera o caminho até o ponto selecionado e depois ao portal
-			if selected_point != null:
-				var path_to_point = _astar.get_id_path(_start_point, selected_point)
-				if not path_to_point.is_empty():
-					path_to_point.append(_end_point)
-					_path = path_to_point
-				else:
-					print("Caminho até o ponto selecionado não encontrado!")
-					return []
-			else:
-				print("Nenhum ponto acessível disponível para o portal!")
-				return []
+		# Gera o caminho até o ponto selecionado e depois ao portal
+		_path = _astar.get_id_path(_start_point, selected_point)
+		_path.append(_end_point)
 
 	else:
 		# Gera o caminho normalmente para tiles que não são portais
