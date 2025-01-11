@@ -15,7 +15,7 @@ var _start_point = Vector2i()
 var _end_point = Vector2i()
 var _path = PackedVector2Array()
 
-# Lista de tiles com ID 2 que devem ser tratados de forma especial
+# Lista de tiles com ID 2 e ID 3 que devem ser tratados de forma especial
 var _ignored_tiles = []
 
 func _ready():
@@ -35,11 +35,11 @@ func _ready():
 		for j in range(_astar.region.position.y, _astar.region.end.y):
 			var pos = Vector2i(i, j)
 			var tile_id = get_cell_source_id(0, pos)
-			# Adiciona tiles com ID 2 à lista especial
-			if tile_id == 2:
+			# Adiciona tiles com ID 2 e ID 3 à lista especial
+			if tile_id == 2 or tile_id == 3:
 				_ignored_tiles.append(pos)
 			# Marca como sólido se não for andável e não for ID 2 ou ID 3
-			elif tile_id != 1 and tile_id != 3:
+			elif tile_id != 1:
 				_astar.set_point_solid(pos)
 
 func _draw():
@@ -73,7 +73,7 @@ func find_path(local_start_point, local_end_point):
 	_start_point = local_to_map(local_start_point)
 	_end_point = local_to_map(local_end_point)
 
-	# Remove temporariamente os tiles com ID 2 do cálculo, exceto o ponto final
+	# Remove temporariamente os tiles com ID 2 e ID 3 do cálculo, exceto o ponto final
 	for pos in _ignored_tiles:
 		if pos != _end_point:
 			_astar.set_point_solid(pos, true)
@@ -110,7 +110,7 @@ func find_path(local_start_point, local_end_point):
 		# Gera o caminho normalmente para tiles que não são portais
 		_path = _astar.get_id_path(_start_point, _end_point)
 
-	# Restaura os tiles com ID 2 como andáveis
+	# Restaura os tiles com ID 2 e ID 3 como andáveis
 	for pos in _ignored_tiles:
 		_astar.set_point_solid(pos, false)
 
